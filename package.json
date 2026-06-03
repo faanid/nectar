@@ -1,0 +1,25 @@
+{
+  "name": "nectar",
+  "version": "1.0.0",
+  "description": "Tour Booking ",
+  "homepage": "https://github.com/faanid/nectar#readme",
+  "bugs": {
+    "url": "https://github.com/faanid/nectar/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faanid/nectar.git"
+  },
+  "license": "ISC",
+  "author": "Faanid",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14",
+    "superagent": "^10.3.0"
+  }
+}
