@@ -1,9 +1,37 @@
+const fs = require("fs");
 const express = require("express");
+const morgan = require("morgan");
 
 const app = express();
 
+app.use(morgan("dev"));
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log("middlewawre");
+  next();
+});
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
+
+const tours = JSON.parse(
+  require("fs").readFileSync(`${__dirname}/dev-data/data/tours-simple.json`),
+);
+
+const getAllTours = (req, res) => {
+  console.log(req.requestTime);
+  res.status(200).json({
+    status: "success",
+    requestedAt: req.requestTime,
+    results: tours.length,
+    data: {
+      tours,
+    },
+  });
+};
 const getTour = (req, res) => {
   const id = req.params.id * 1;
   const tour = tours.find((el) => el.id === id);
@@ -22,7 +50,6 @@ const getTour = (req, res) => {
     },
   });
 };
-
 const creatTour = (req, res) => {
   // console.log(req.body);
   const newId = tours[tours.length - 1].id + 1;
@@ -49,16 +76,6 @@ const updateTour = (req, res) => {
     },
   });
 };
-
-const getAllTours = (req, res) => {
-  res.status(200).json({
-    status: "success",
-    data: {
-      tours,
-    },
-  });
-};
-
 const deleteTour = (req, res) => {
   if (req.params.id * 1 > tours.length) {
     return res.status(404).json({
@@ -71,7 +88,7 @@ const deleteTour = (req, res) => {
     data: null,
   });
 };
-// app.get("/api/v1/tours", getAllTours);
+// app.get("/api/v1/tours", getAllT ours);
 // app,get('/api/v1/tours/:id',getTour)
 // app.post("/api/v1/tours", creatTour);
 // app.patch("/api/v1/tours/:id", updateTour);
