@@ -15,12 +15,13 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon server.js",
+    "start": "nodemon server.js",
     "start:prod": "NODE_ENV=production node server.js"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "mongoose": "^5.13.23",
     "morgan": "^1.11.0",
     "nodemon": "^3.1.14",
     "superagent": "^10.3.0",
