@@ -8,6 +8,7 @@ Thumbs.db
 # Environment variables
 .env
 .env.*
+config.env
 
 # Dependency directories
 node_modules/
