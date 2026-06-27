@@ -65,11 +65,12 @@ const tourController = require("../controllers/tourController");
 const router = express.Router();
 
 // router.param("id", tourController.checkID);
+router.route('/top-5-cheap').get(tourController.aliasTopTour, tourController.getAllTours)
 
 router
   .route("/")
   .get(tourController.getAllTours)
-  .post(tourController.creatTour);
+  .post(tourController.createTour);
 router
   .route("/:id")
   .get(tourController.getTour)
