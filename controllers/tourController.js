@@ -6,16 +6,28 @@ exports.aliasTopTour = (req, res, next) =>{
   req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
 }
 
+class APIFeatures {
+  constructor(query, queryString){
+    this.query = query;
+    this.queryString = queryString;
+  }
+
+  filter(){
+
+  }
+}
+
 exports.getAllTours = async (req, res) => {
   try{
     const queryObj = {...req.query};
-    const excludeFields = ['page', 'sort','limit','fields'];
+    const excludedFields = ['page', 'sort','limit','fields'];
     excludedFields.forEach(el => delete queryObj[el]);
 
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
+    
+    const query = await Tour.find(JSON.parse(queryStr)); 
 
-    const query = await Tour.find(JSON.parse(querStr)); 
     if(req.query.sort){
       const sortBy = req.query.sort.split(',').join('');
       query = query.sort(req.query.sort);
