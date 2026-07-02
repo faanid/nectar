@@ -22,3 +22,6 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`app running on port ${port}...`);
 });
+
+console.log(process.env.DATABASE);
+console.log(mongoose.connection.name);
