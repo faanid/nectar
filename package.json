@@ -28,7 +28,8 @@
     "superagent": "^10.3.0",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui": "^5.32.6",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "validator": "^13.15.35"
   },
   "devDependencies": {
     "eslint": "^10.4.1",
