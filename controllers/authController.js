@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
-const APPError = require("./../utils/appError");
+const AppError = require("./../utils/appError");
+const { promisify } = require("util");
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -35,9 +36,9 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError("Please provide email and password!", 400));
   }
 
-  const user = awaitUser.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select("+password");
 
-  if (!user || !user.correctPassword(password, user.password)) {
+  if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Incorrect email or password", 401));
   }
 
@@ -59,23 +60,28 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   if (!token) {
-  return next(
-    new AppError("You are not logged in! Please log in to get access.", 401),
-  );
-}
+    return next(
+      new AppError("You are not logged in! Please log in to get access.", 401),
+    );
+  }
 
-const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-const currentUser = await User.findById(decoded.id);
-if(!currentUser){
-  return next(new AppError('The user belonging to this token does no longer exist',401))
-}
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
+    return next(
+      new AppError(
+        "The user belonging to this token does no longer exist",
+        401,
+      ),
+    );
+  }
 
-if (currentUser.changedPasswordAfter(decoded.iat)){
-  return next(new AppError('User recently changed password! please log in again', 401))
-}
-    req.user = currentUser;
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next(
+      new AppError("User recently changed password! please log in again", 401),
+    );
+  }
+  req.user = currentUser;
   next();
 });
-
-

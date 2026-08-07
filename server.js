@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const app = require("./app");
 dotenv.config({ path: "./config.env" });
+const app = require("./app");
 
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT EXCEPTION  shutting down...");
@@ -13,28 +13,31 @@ const DB = process.env.DATABASE.replace(
   "<DATABASE_PASSWORD>",
   process.env.DATABASE_PASSWORD,
 );
+console.log("FINAL DB:", DB);
 mongoose
-  .connect(DB, {
-    // .connect(process.env.DATABASE_LOCAL, {
-    useNewUrlParser: true,
-    // useCreateIndex: true,
-    // useFindAndModify: false,
+  .connect(DB)
+  .then((con) => {
+    console.log("Connected to the database successfully!");
+
+    const port = process.env.PORT || 3000;
+
+    const server = app.listen(port, () => {
+      console.log(`app running on port ${port}...`);
+    });
   })
-  .then((con) => console.log("Connected to the database successfully!"));
-
-const port = process.env.PORT || 3000;
-const server = app.listen(port, () => {
-  console.log(`app running on port ${port}...`);
-});
-
+  .catch((err) => {
+    console.log("DATABASE CONNECTION ERROR:");
+    console.log(err);
+  });
 process.on("unhandledRejection", (err) => {
-  // console.log('UNHANDLED REJECTION ');
-  // console.log(err.name, err.message);
+  // console.log("UNHANDLED REJECTION");
+  // console.log(err.name);
+  // console.log(err.message);
+
   server.close(() => {
     process.exit(1);
   });
 });
-
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT EXCEPTION  shutting down...");
   console.log(err.name, err.message);
