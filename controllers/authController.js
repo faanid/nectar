@@ -101,6 +101,10 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
   req.user = currentUser;
+
+  console.log("USER:", req.user.email);
+  console.log("ROLE:", req.user.role);
+
   next();
 });
 
