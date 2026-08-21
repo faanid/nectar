@@ -3,7 +3,6 @@ const AppError = require("./../utils/appError");
 const APIFeatures = require("./../utils/apiFeatures");
 
 
-
 exports.deleteOne  = Model => catchAsync(async (req, res, next) => {
   const doc = await Model.findByIdAndDelete(req.params.id);
 
@@ -43,7 +42,6 @@ exports.createOne = Model => catchAsync(async (req, res, next) => {
       data: doc,
     },
   });
-
   
 });
 
